@@ -1,0 +1,22 @@
+{
+  "name": "big-bang-crud",
+  "version": "1.0.0",
+  "description": "Generic cruds for expressjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pablor21/big-bang-crud.git"
+  },
+  "author": "Pablo Ramirez",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pablor21/big-bang-crud/issues"
+  },
+  "homepage": "https://github.com/pablor21/big-bang-crud#readme",
+  "dependencies": {
+    "api-query-params": "^4.5.0"
+  }
+}
