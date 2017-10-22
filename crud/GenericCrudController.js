@@ -393,6 +393,8 @@ class GenericCrudController{
             data
           };
           resolve(params);
+        }).catch((err)=>{
+          reject(err);
         })
       })
 

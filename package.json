@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/pablor21/big-bang-crud#readme",
   "dependencies": {
-    "api-query-params": "^4.5.0"
+    "api-query-params": "^4.5.0",
+    "mongoose": "^4.12.4",
+    "statuses": "^1.4.0"
   }
 }

@@ -2,9 +2,9 @@ const aqp = require('api-query-params');
 const constants=require('./constants');
 
 const defaults = {
-    'DEFAULT_MAX_RESULTS': APP.config.DEFAULT_MAX_RESULTS || 100,
-    'DEFAULT_PAGE_SIZE': APP.config.DEFAULT_PAGE_SIZE || 100,
-    'DEFAULT_ORDER': APP.config.DEFAULT_ORDER || '_id',
+    'DEFAULT_MAX_RESULTS': 100,
+    'DEFAULT_PAGE_SIZE':  100,
+    'DEFAULT_ORDER': '_id',
 }
 
 
