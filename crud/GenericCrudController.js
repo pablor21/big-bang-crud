@@ -231,13 +231,20 @@ class GenericCrudController{
     next(err);
   }
 
+  translateMessage(key, vars, defaultMsgKey){
+    if(undefined!==res.locals && (typeof res.locals.__=='function')){
+      (res.locals.__(key) != key) ? res.locals.__(key, vars) : res.locals.__(defaultMsg, vars);
+    }
+    return key;
+  }
+
   create(req, res, next, autoRender = true) {
     try {
       let promise = new Promise((resolve, reject) =>  {
         this.parseRequestToObject(req, 'create').then((obj) =>  {
           this._create(obj)
           .then((data) =>  {
-            let message = (res.locals.__(this.resourceName + ".created") != this.resourceName + ".created") ? res.locals.__(this.resourceName + ".created") : res.locals.__("resource.created", this.resourceName);
+            let message = this.translateMessage(this.resourceName + ".created", this.resourceName, "resource.created");
             this.putMessage(res, 'info', message);
             let params = {
               method: 'create',
@@ -258,7 +265,7 @@ class GenericCrudController{
           this.render(params, req, res, next);
         })
         .catch((err) =>  {
-          next(err);
+          this.catchError(err, req, res, next);
         })
       }
       return promise;
@@ -275,7 +282,7 @@ class GenericCrudController{
 
           this._update(req.params.id, obj)
           .then((data) =>  {
-            let message = (res.locals.__(this.resourceName + ".updated") != this.resourceName + ".updated") ? res.locals.__(this.resourceName + ".updated") : res.locals.__("resource.updated", this.resourceName);
+            let message = this.translateMessage(this.resourceName + ".updated", this.resourceName, "resource.updated");
             this.putMessage(res, 'info', message);
             let params = {
               method: 'update',
@@ -294,7 +301,7 @@ class GenericCrudController{
           this.render(params, req, res, next);
         })
         .catch((err) =>  {
-          next(err);
+          this.catchError(err, req, res, next);
         })
       }
       return promise;
@@ -311,7 +318,7 @@ class GenericCrudController{
 
           this._replace(req.params.id, obj)
           .then((data) =>  {
-            let message = (res.locals.__(this.resourceName + ".updated") != this.resourceName + ".updated") ? res.locals.__(this.resourceName + ".updated") : res.locals.__("resource.updated", this.resourceName);
+            let message = this.translateMessage(this.resourceName + ".updated", this.resourceName, "resource.updated");
             this.putMessage(res, 'info', message);
             let params = {
               method: 'replace',
@@ -331,7 +338,7 @@ class GenericCrudController{
           this.render(params, req, res, next);
         })
         .catch((err) =>  {
-          next(err);
+          this.catchError(err, req, res, next);
         })
       }
       return promise;
@@ -347,7 +354,7 @@ class GenericCrudController{
       let promise = new Promise((resolve, reject) =>  {
         this._deleteById(req.params.id)
         .then((data) =>  {
-          let message = (res.locals.__(this.resourceName + ".deleted") != this.resourceName + ".deleted") ? res.locals.__(this.resourceName + ".deleted") : res.locals.__("resource.deleted", this.resourceName);
+          let message = this.translateMessage(this.resourceName + ".deleted", this.resourceName, "resource.deleted");
           this.putMessage(res, 'info', message);
           let params = {
             method: 'delete',
@@ -365,7 +372,7 @@ class GenericCrudController{
           this.render(params, req, res, next);
         })
         .catch((err) =>  {
-          next(err);
+          this.catchError(err, req, res, next);
         })
       }
       return promise;
@@ -385,7 +392,7 @@ class GenericCrudController{
           data.results=finalResult;
 
           if (data.total == 0) {
-            let message = (res.locals.__(this.resourceName + ".no_results") != this.resourceName + ".no_results") ? res.locals.__(this.resourceName + ".no_results") : res.locals.__("resource.no_results", this.resourceName);
+            let message = this.translateMessage(this.resourceName + ".no_results", this.resourceName, "resource.no_results");
             this.putMessage(res, 'warning', message);
           }
           let params = {
@@ -402,7 +409,7 @@ class GenericCrudController{
         promise.then((data)=>{
           this.render(data, req, res, next);
         }).catch((err)=>{
-          throw err;
+          this.catchError(err, req, res, next);
         })
       }
       return promise;
@@ -439,13 +446,17 @@ class GenericCrudController{
           this.render(params, req, res, next);
         })
         .catch((err) =>  {
-          next(err);
+          this.catchError(err, req, res, next);
         })
       }
       return promise;
     } catch (ex) {
       this.catchError(ex, req, res, next);
     }
+  }
+
+  listAll(filter = {}) {
+    return this._list({});
   }
 
   _list(filter){
@@ -467,9 +478,6 @@ class GenericCrudController{
     return promise;
   }
 
-  listAll(filter = {}) {
-    return this._list({});
-  }
 
   _findById(id, options={}) {
     let promise = new Promise((resolve, reject) => {
